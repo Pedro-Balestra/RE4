@@ -8,39 +8,54 @@ import java.sql.SQLException;
 
 public class Buy_Gun extends ConnectionDAO {
 
-    boolean sucesso = false;
+    boolean sucesso = false; //Variável de retorno
 
-    //Método para comprar uma arma
-    public boolean buy_gun(Item item, Gun gun){
+    // Método para comprar uma arma
+    public boolean buy_gun(Item item, int id) {
 
+        //Conectando ao Banco de Dados
         connectToDB();
-        String sql = "INSERT INTO Item (idItem, valueItem, typeItem, nameItem) values(?, ?, ?, ?)";
-        String sql3 = "INSERT INTO Gun (idGun, fire_power, firing_speed, reload_speed, capacity, rangeGun, explosion, capacity_total, num_bulls_mag, idItem) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try{
+        //Instâncias locais
+        Gun gun = new Gun(id);
+        Item item2 = new Item(gun.idItem);
+
+        for(int j =0; j < 1; j++){
+
+            if(item instanceof Gun){
+                Gun gunAux = (Gun) item;
+                gun = gunAux;
+            }
+
+        }
+
+        item2.idItem = id;
+
+        String sql = "INSERT INTO Item (idItem, nameItem, valueItem) values(?, ?, ?)";
+        String sql2 = "INSERT INTO Gun (fire_power, firing_speed, reload_speed, capacity, rangeGun, explosion, capacity_total, num_bulls_mag, idItem) values(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
 
             pst = con.prepareStatement(sql);
             pst.setInt(1, item.idItem);
-            pst.setDouble(2, item.valueItem);
-            pst.setString(3, item.typeItem);
-            pst.setString(4, item.nameItem);
+            pst.setString(2, item.nameItem);
+            pst.setDouble(3, item.valueItem);
             pst.execute();
 
-            pst = con.prepareStatement(sql3);
-            pst.setInt(1, gun.idGun);
-            pst.setDouble(2, gun.fire_power);
-            pst.setDouble(3, gun.firing_speed);
-            pst.setDouble(4, gun.reload_speed);
-            pst.setInt(5, gun.capacity);
-            pst.setInt(6, gun.range);
-            pst.setInt(7, gun.explosion);
-            pst.setInt(8, gun.capacity_total);
-            pst.setInt(9, gun.num_bulls_mag);
-            pst.setInt(10,item.idItem);
+            pst = con.prepareStatement(sql2);
+            pst.setDouble(1, gun.fire_power);
+            pst.setDouble(2, gun.firing_speed);
+            pst.setDouble(3, gun.reload_speed);
+            pst.setInt(4, gun.capacity);
+            pst.setInt(5, gun.range);
+            pst.setString(6, gun.explosion);
+            pst.setInt(7, gun.capacity_total);
+            pst.setInt(8, gun.num_bulls_mag);
+            pst.setInt(9, item.idItem);
             pst.execute();
             sucesso = true;
 
-        } catch(SQLException exc){
+        } catch (SQLException exc) {
             System.out.println("Erro: " + exc.getMessage());
             sucesso = false;
 
@@ -48,7 +63,7 @@ public class Buy_Gun extends ConnectionDAO {
             try {
                 con.close();
                 pst.close();
-            } catch(SQLException exc) {
+            } catch (SQLException exc) {
                 System.out.println("Erro: " + exc.getMessage());
             }
         }

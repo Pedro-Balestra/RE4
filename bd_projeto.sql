@@ -8,17 +8,15 @@ USE RE4;
 
 CREATE TABLE IF NOT EXISTS Merchant(
    idMerchant INT NOT NULL,
-   items INT NOT NULL,
-   PRIMARY KEY (`idMerchant`)
+   PRIMARY KEY (idMerchant)
 );
 
 -- -----------------------------------------------------
 -- Criando Tabela "Player"
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Player (
-  idPlayer INT NOT NULL,
+  idPlayer INT NOT NULL AUTO_INCREMENT,
   namePlayer VARCHAR(45) NOT NULL,
-  life DOUBLE NOT NULL,
   pasetas DOUBLE NOT NULL,
   inventory INT NOT NULL,
   idMerchant INT NOT NULL,
@@ -34,89 +32,35 @@ CREATE TABLE IF NOT EXISTS Player (
 -- Criando Tabela "Item"
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Item(
-  idItem INT NOT NULL,
-  valueItem DOUBLE NOT NULL,
-  typeItem VARCHAR(45) NOT NULL,
+  idItem INT NOT NULL AUTO_INCREMENT,
   nameItem VARCHAR(45) NOT NULL,
-  idMerchant INT,
-  PRIMARY KEY (idItem),
-  CONSTRAINT fk_Item_Merchant1
-    FOREIGN KEY (idMerchant)
-    REFERENCES Merchant (idMerchant)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-    );
+  valueItem DOUBLE NOT NULL,
+  idPlayer INT,
+  PRIMARY KEY (idItem)
+ );
 
 -- -----------------------------------------------------
 -- Criando Tabela "Gun"
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS Gun (
-  idGun INT NOT NULL,
+  idGun INT NOT NULL AUTO_INCREMENT,
   fire_power DOUBLE NOT NULL,
   firing_speed DOUBLE NOT NULL,
   reload_speed DOUBLE NOT NULL,
   capacity INT NOT NULL,
   rangeGun INT NOT NULL,
-  explosion INT NOT NULL,
-  capacity_total INT NOT NULL,
-  num_bulls_mag INT NOT NULL,
+  explosion VARCHAR(10),
+  capacity_total INT,
+  num_bulls_mag INT,
   idItem INT NOT NULL,
-  Item_idItem INT,
   PRIMARY KEY (idGun),  
-  CONSTRAINT fk_Gun_Item1
+  CONSTRAINT fk_Gun_Item
     FOREIGN KEY (idItem)
     REFERENCES Item (idItem)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
   );
   
--- -----------------------------------------------------
--- Criando Tabela "Treasure"
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS Treasure (
-  idTreasures INT NOT NULL,
-  nameTreasure VARCHAR(45) NOT NULL,
-  idItem INT NOT NULL,
-  PRIMARY KEY (idTreasures),
-  CONSTRAINT fk_Treasures_Item1
-    FOREIGN KEY (idItem)
-    REFERENCES Item (idItem)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
--- -----------------------------------------------------
--- Criando Tabela "Heal"
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS Heal (
-  idHeal INT NOT NULL,
-  typeHeal VARCHAR(45) NOT NULL,
-  effect VARCHAR(45) NOT NULL,
-  idItem INT NOT NULL,
-  PRIMARY KEY (idHeal),
-  CONSTRAINT fk_Heal_Item1
-    FOREIGN KEY (idItem)
-    REFERENCES Item (idItem)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
--- -----------------------------------------------------
--- Criando Tabela "Granade"
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS Granade (
-  idGranade INT NOT NULL,
-  typeGranade VARCHAR(45) NOT NULL,
-  rangeGranade DOUBLE NOT NULL,
-  explosion_power DOUBLE NOT NULL,
-  color VARCHAR(15) NOT NULL,
-  idItem INT NOT NULL,
-  PRIMARY KEY (idGranade),
-  CONSTRAINT fk_Granade_Item
-    FOREIGN KEY (idItem)
-    REFERENCES Item (idItem)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
-
-
 -- -----------------------------------------------------
 -- Criando Tabela "Belong"
 -- -----------------------------------------------------
@@ -135,8 +79,17 @@ CREATE TABLE IF NOT EXISTS Belong (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-#select * from gun;
-select * from item;
-select * from granade;
-#select * from heal;
-#select * from treasure;
+
+-- -----------------------------------------------------
+-- Setando Valores Estáticos
+-- -----------------------------------------------------
+INSERT INTO Merchant VALUES (1);
+INSERT INTO Player VALUES (1, "Leon", 2000, 6, 1);
+INSERT INTO Item VALUES (1, "Knife", 0, 1);
+INSERT INTO Belong VALUES (1, 1);
+
+select * from Merchant;
+select * from Player;
+select * from Item;
+select * from Belong;
+
